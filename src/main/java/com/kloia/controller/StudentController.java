@@ -26,9 +26,7 @@ public class StudentController {
     private StudentService studentService;
 
     @GetMapping
-    @AttributeExtractor
-    public List<Student> getStudents(HttpServletRequest request,
-                                     @RequestParam(value = "studentId", defaultValue = "0") String studentId) {
+    public List<Student> getStudents() {
         return studentService.getStudents();
     }
 

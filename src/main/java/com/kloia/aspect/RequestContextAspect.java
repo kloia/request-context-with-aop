@@ -26,7 +26,6 @@ public class RequestContextAspect {
     @Before(value = "@annotation(attributeExtractor)")
     public void process(JoinPoint joinPoint, AttributeExtractor attributeExtractor) {
         try {
-            //if return value of the annotated method needed
             HttpServletRequest request = getRequest(joinPoint);
             requestScopedAttributes.setUserId(getHeader(request, "userId"));
             requestScopedAttributes.setStudentId((String) getArgumentMap(joinPoint).get("studentId"));
@@ -40,7 +39,9 @@ public class RequestContextAspect {
         Object[] parameterValues = joinPoint.getArgs();
         String[] parameterNames = ((org.aspectj.lang.reflect.MethodSignature) joinPoint.getSignature()).getParameterNames();
         for (Object object : parameterValues) {
-            if (object instanceof HttpServletRequest) return (HttpServletRequest) object;
+            if (object instanceof HttpServletRequest) {
+                return (HttpServletRequest) object;
+            }
         }
         return null;
     }
