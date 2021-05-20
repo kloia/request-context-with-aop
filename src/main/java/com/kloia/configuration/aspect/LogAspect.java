@@ -35,26 +35,21 @@ public class LogAspect {
 
     @Around("controllerPackagePointcut()")
     public Object controllerAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        prepareLogFromStaticMethod(proceedingJoinPoint);
+        prepareLog(proceedingJoinPoint);
         return proceedingJoinPoint.proceed();
     }
 
     @Around(value = "servicePackagePointcut()")
     public Object serviceAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        prepareLogFromStaticMethod(proceedingJoinPoint);
+        prepareLog(proceedingJoinPoint);
         return proceedingJoinPoint.proceed();
     }
 
-    public void prepareLogFromStaticMethod(ProceedingJoinPoint proceedingJoinPoint) {
+    public void prepareLog(ProceedingJoinPoint proceedingJoinPoint) {
         MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
-        String name = signature.getClass().getSimpleName() + ":" + signature.getMethod().getName();
+        String name = signature.getMethod().getDeclaringClass().getSimpleName() + ":" + signature.getMethod().getName();
         RequestScopedAttributes requestScopedAttributes = ContextUtils.getRequestContext();
         System.out.println("On Method [" + name + "] - User ID is " + requestScopedAttributes.getUserId());
     }
 
-    public void prepareLogFromBean(ProceedingJoinPoint proceedingJoinPoint) {
-        MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
-        String methodName = signature.getMethod().getName();
-//        System.out.println("On Service [" + methodName + "] - User ID is " + this.requestScopedAttributes.getUserId());
-    }
 }

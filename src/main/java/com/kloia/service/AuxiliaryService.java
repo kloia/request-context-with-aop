@@ -15,8 +15,8 @@ public class AuxiliaryService {
 
         RequestScopedAttributes requestScopedAttributesFromContext = ContextUtils.getRequestContext();
 
-        log.info("ThreadId = , From Context:  " + threadId + "----" + requestScopedAttributesFromContext.getUserId());
-        log.info("ThreadId = , From Context:  " + threadId + "----" + requestScopedAttributesFromContext.getStudentId());
+        log.info("ThreadId = " + threadId + ", From Context:  ---- UserId: " + requestScopedAttributesFromContext.getUserId());
+        log.info("ThreadId = " + threadId + ", From Context:  ---- StudentId: " + requestScopedAttributesFromContext.getStudentId());
 
         return true;
     }
