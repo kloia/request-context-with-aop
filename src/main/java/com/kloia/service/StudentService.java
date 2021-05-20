@@ -2,28 +2,30 @@ package com.kloia.service;
 
 
 import com.kloia.model.Student;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Executor;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class StudentService {
 
-    private final AuxiliaryService auxiliaryService;
+    @Autowired
+    @Qualifier("myExecutor")
+    private Executor executor;
+
+    @Autowired
+    private AuxiliaryService auxiliaryService;
 
     public List<Student> getStudents() {
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        for (int i = 0; i < 10; i++) {
-            executorService.execute(auxiliaryService::auxiliaryActions);
+        for (int i = 0; i < 20; i++) {
+            executor.execute(auxiliaryService::auxiliaryActions);
         }
-        executorService.shutdown();
         //auxiliaryService.auxiliaryActions();
         return Collections.singletonList(
                 Student.builder()

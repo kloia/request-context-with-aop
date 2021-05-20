@@ -1,0 +1,23 @@
+package com.kloia.configuration.executor;
+
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.Executor;
+
+@Configuration
+public class ExecutorConfig extends AsyncConfigurerSupport {
+
+    @Override
+    @Bean(name = "myExecutor")
+    public Executor getAsyncExecutor() {
+        ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+        threadPoolTaskExecutor.setCorePoolSize(10);
+        return threadPoolTaskExecutor;
+    }
+
+}
+
