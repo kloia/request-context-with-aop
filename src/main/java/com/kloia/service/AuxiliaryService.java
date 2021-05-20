@@ -17,14 +17,10 @@ public class AuxiliaryService {
 
         RequestScopedAttributes requestScopedAttributesFromContext = ContextUtils.getRequestContext();
 
-        log.info("ThreadId = , From Context:  " + threadId + "----" + requestScopedAttributesFromContext.getUserId());
-        log.info("ThreadId = , From Context:  " + threadId + "----" + requestScopedAttributesFromContext.getStudentId());
-//        try {
-//            Thread.sleep(5000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        log.info("ThreadId = , From Bean: " + threadId + "----" + requestScopedAttributes.getUserId());
-        log.info("ThreadId = , From Bean: " + threadId + "----" + requestScopedAttributes.getStudentId());
+        log.info("ThreadId = " + threadId + ", From Context:  ---- UserId: " + requestScopedAttributesFromContext.getUserId());
+        log.info("ThreadId = " + threadId + ", From Context:  ---- StudentId: " + requestScopedAttributesFromContext.getStudentId());
+
+        log.info("ThreadId = " + threadId + ", From Bean:  ---- UserId: " + requestScopedAttributes.getUserId());
+        log.info("ThreadId = " + threadId + ", From Bean:  ---- StudentId: " + requestScopedAttributes.getStudentId());
     }
 }

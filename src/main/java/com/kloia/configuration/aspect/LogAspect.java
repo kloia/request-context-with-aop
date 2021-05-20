@@ -49,14 +49,14 @@ public class LogAspect {
 
     public void prepareLogFromStaticMethod(ProceedingJoinPoint proceedingJoinPoint) {
         MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
-        String methodName = signature.getMethod().getName();
+        String name = signature.getMethod().getDeclaringClass().getSimpleName() + ":" + signature.getMethod().getName();
         RequestScopedAttributes requestScopedAttributes = ContextUtils.getRequestContext();
-        System.out.println("On Controller [" + methodName + "] - User ID is " + requestScopedAttributes.getUserId());
+        System.out.println("On Method [" + name + "] - User ID is " + requestScopedAttributes.getUserId());
     }
 
     public void prepareLogFromBean(ProceedingJoinPoint proceedingJoinPoint) {
         MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
-        String methodName = signature.getMethod().getName();
-        System.out.println("On Service [" + methodName + "] - User ID is " + this.requestScopedAttributes.getUserId());
+        String name = signature.getMethod().getDeclaringClass().getSimpleName() + ":" + signature.getMethod().getName();
+        System.out.println("On Method [" + name + "] - User ID is " + this.requestScopedAttributes.getUserId());
     }
 }
