@@ -1,7 +1,8 @@
 package com.kloia.configuration.aspect;
 
+import com.kloia.configuration.CustomContext;
 import com.kloia.configuration.RequestScopedAttributes;
-import com.kloia.service.ContextUtils;
+import com.kloia.configuration.RequestScopedContext;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -35,20 +36,27 @@ public class LogAspect {
 
     @Around("controllerPackagePointcut()")
     public Object controllerAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        prepareLog(proceedingJoinPoint);
+        prepareLogFromCustomContext(proceedingJoinPoint);
         return proceedingJoinPoint.proceed();
     }
 
     @Around(value = "servicePackagePointcut()")
     public Object serviceAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        prepareLog(proceedingJoinPoint);
+        prepareLogFromCustomContext(proceedingJoinPoint);
         return proceedingJoinPoint.proceed();
     }
 
-    public void prepareLog(ProceedingJoinPoint proceedingJoinPoint) {
+    public void prepareLogFromRequestScopedContext(ProceedingJoinPoint proceedingJoinPoint) {
         MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
         String name = signature.getMethod().getDeclaringClass().getSimpleName() + ":" + signature.getMethod().getName();
-        RequestScopedAttributes requestScopedAttributes = ContextUtils.getRequestContext();
+        RequestScopedAttributes requestScopedAttributes = RequestScopedContext.get();
+        System.out.println("On Method [" + name + "] - User ID is " + requestScopedAttributes.getUserId());
+    }
+
+    public void prepareLogFromCustomContext(ProceedingJoinPoint proceedingJoinPoint) {
+        MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
+        String name = signature.getMethod().getDeclaringClass().getSimpleName() + ":" + signature.getMethod().getName();
+        RequestScopedAttributes requestScopedAttributes = CustomContext.get();
         System.out.println("On Method [" + name + "] - User ID is " + requestScopedAttributes.getUserId());
     }
 

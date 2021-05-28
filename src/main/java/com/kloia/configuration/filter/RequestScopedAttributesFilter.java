@@ -1,7 +1,7 @@
 package com.kloia.configuration.filter;
 
 import com.kloia.configuration.RequestScopedAttributes;
-import com.kloia.service.ContextUtils;
+import com.kloia.configuration.RequestScopedContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
@@ -34,7 +34,7 @@ public class RequestScopedAttributesFilter extends RequestContextFilter {
             requestScopedAttributes.setUserId(getHeader(request, "userId"));
             requestScopedAttributes.setStudentId(getFirstParameter(request, "studentId"));
 
-            ContextUtils.setRequestContext(request, requestScopedAttributes);
+            RequestScopedContext.set(request, requestScopedAttributes);
         } catch (Throwable throwable) {
             log.info("An error occurred during attribute extraction : ", throwable);
         }
