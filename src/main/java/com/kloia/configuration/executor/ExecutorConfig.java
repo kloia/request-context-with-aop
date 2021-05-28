@@ -18,7 +18,7 @@ public class ExecutorConfig extends AsyncConfigurerSupport {
     @Bean(name = "myExecutor")
     public Executor getAsyncExecutor() {
         ContextAwarePoolExecutor contextAwarePoolExecutor = new ContextAwarePoolExecutor();
-        contextAwarePoolExecutor.setCorePoolSize(2);
+        contextAwarePoolExecutor.setCorePoolSize(200);
         return contextAwarePoolExecutor;
     }
 

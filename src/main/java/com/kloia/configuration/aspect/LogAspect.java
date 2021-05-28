@@ -50,14 +50,14 @@ public class LogAspect {
         MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
         String name = signature.getMethod().getDeclaringClass().getSimpleName() + ":" + signature.getMethod().getName();
         RequestScopedAttributes requestScopedAttributes = RequestScopedContext.get();
-        System.out.println("On Method [" + name + "] - User ID is " + requestScopedAttributes.getUserId());
+        //System.out.println("On Method [" + name + "] - User ID is " + requestScopedAttributes.getUserId());
     }
 
     public void prepareLogFromCustomContext(ProceedingJoinPoint proceedingJoinPoint) {
         MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
         String name = signature.getMethod().getDeclaringClass().getSimpleName() + ":" + signature.getMethod().getName();
         RequestScopedAttributes requestScopedAttributes = CustomContext.get();
-        System.out.println("On Method [" + name + "] - User ID is " + requestScopedAttributes.getUserId());
+        //System.out.println("On Method [" + name + "] - User ID is " + requestScopedAttributes.getUserId());
     }
 
 }

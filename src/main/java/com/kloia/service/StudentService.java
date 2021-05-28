@@ -37,15 +37,15 @@ public class StudentService {
             System.err.println("NOT TRUE");
         }
 
-        for (int i = 0; i < 100; i++) {
-            CompletableFuture<Void> future3 = CompletableFuture.runAsync(() -> auxiliaryService.auxiliaryActions(), executor);
-            CompletableFuture<Void> future4 = CompletableFuture.runAsync(() -> auxiliary2Service.auxiliaryActions(), executor);
-            CompletableFuture<Void> voidCompletableFuture = CompletableFuture.allOf(future3, future4);
-            voidCompletableFuture.get();
-            if (!voidCompletableFuture.isDone()) {
-                System.out.println("NOT DONE");
-            }
-        }
+//        for (int i = 0; i < 100; i++) {
+//            CompletableFuture<Void> future3 = CompletableFuture.runAsync(() -> auxiliaryService.auxiliaryActions(), executor);
+//            CompletableFuture<Void> future4 = CompletableFuture.runAsync(() -> auxiliary2Service.auxiliaryActions(), executor);
+//            CompletableFuture<Void> voidCompletableFuture = CompletableFuture.allOf(future3, future4);
+//            voidCompletableFuture.get();
+//            if (!voidCompletableFuture.isDone()) {
+//                System.out.println("NOT DONE");
+//            }
+//        }
 
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
