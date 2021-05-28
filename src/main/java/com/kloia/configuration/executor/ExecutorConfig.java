@@ -3,7 +3,6 @@ package com.kloia.configuration.executor;
 
 import com.kloia.configuration.CustomContext;
 import com.kloia.configuration.RequestScopedAttributes;
-import com.kloia.configuration.RequestScopedContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,14 +18,14 @@ public class ExecutorConfig extends AsyncConfigurerSupport {
     @Bean(name = "myExecutor")
     public Executor getAsyncExecutor() {
         ContextAwarePoolExecutor contextAwarePoolExecutor = new ContextAwarePoolExecutor();
-        contextAwarePoolExecutor.setCorePoolSize(10);
+        contextAwarePoolExecutor.setCorePoolSize(2);
         return contextAwarePoolExecutor;
     }
 
     public static class ContextAwarePoolExecutor extends ThreadPoolTaskExecutor {
         @Override
         public void execute(Runnable task) {
-            RequestScopedAttributes requestContext = RequestScopedContext.get();
+            RequestScopedAttributes requestContext = CustomContext.get();
             super.execute(new ContextAwareRunnable(task, requestContext));
         }
     }

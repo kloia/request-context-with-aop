@@ -10,19 +10,19 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuxiliaryService {
+public class Auxiliary2Service {
 
     @SneakyThrows
     public boolean auxiliaryActions() {
         long threadId = Thread.currentThread().getId();
 
+        Thread.sleep(1000L);
+
         // RequestScopedAttributes requestScopedAttributesFromContext = ContextUtils.getRequestContext();
         RequestScopedAttributes requestScopedAttributesFromContext = CustomContext.get();
 
-        Thread.sleep(1000L);
-
-        log.info("ThreadId = " + threadId + ", From Context:  ---- UserId: " + requestScopedAttributesFromContext.getUserId());
-        log.info("ThreadId = " + threadId + ", From Context:  ---- StudentId: " + requestScopedAttributesFromContext.getStudentId());
+        log.info("2- ThreadId = " + threadId + ", From Context:  ---- UserId: " + requestScopedAttributesFromContext.getUserId());
+        log.info("2- ThreadId = " + threadId + ", From Context:  ---- StudentId: " + requestScopedAttributesFromContext.getStudentId());
 
         return true;
     }

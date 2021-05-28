@@ -21,7 +21,7 @@ public class StudentController {
     private final StudentService studentService;
 
     @GetMapping
-    public List<Student> getStudents() {
+    public List<Student> getStudents() throws Exception {
         return studentService.getStudents();
     }
 
