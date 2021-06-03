@@ -1,8 +1,8 @@
 package com.kloia.service;
 
-import com.kloia.KafkaRequestAttribute;
 import com.kloia.configuration.CustomContext;
 import com.kloia.configuration.RequestScopedAttributes;
+import com.kloia.kafka.KafkaSenderService;
 import com.kloia.model.Student;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -16,15 +16,16 @@ public class AuxiliaryService {
 
     private final AdditionalUtil additionalUtil;
 
-    private final KafkaRequestAttribute kafkaRequestAttribute;
+    private final KafkaSenderService kafkaSenderService;
 
     @SneakyThrows
     public boolean auxiliaryActions() {
         long threadId = Thread.currentThread().getId();
 
+        kafkaSenderService.sendMessage(Student.builder().build());
+
         // RequestScopedAttributes requestScopedAttributesFromContext = ContextUtils.getRequestContext();
         RequestScopedAttributes requestScopedAttributesFromContext = CustomContext.get();
-        kafkaRequestAttribute.send(Student.builder().build());
         Thread.sleep(1000L);
 
         boolean someMethod = additionalUtil.someMethod();

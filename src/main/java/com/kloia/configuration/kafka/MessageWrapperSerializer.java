@@ -26,24 +26,26 @@ import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  *
  */
 public class MessageWrapperSerializer<T> implements Serializer<T> {
-    protected final ObjectMapper objectMapper;
-    private final RequestScopedAttributes requestScopedAttributes;
 
-    public MessageWrapperSerializer(RequestScopedAttributes requestScopedAttributes) {
-        this(requestScopedAttributes, new ObjectMapper());
+    protected final ObjectMapper objectMapper;
+    private final Supplier<RequestScopedAttributes> contextProvider;
+
+    public MessageWrapperSerializer(Supplier<RequestScopedAttributes> contextProvider) {
+        this(contextProvider, new ObjectMapper());
         this.objectMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public MessageWrapperSerializer(RequestScopedAttributes requestScopedAttributes, ObjectMapper objectMapper) {
+    public MessageWrapperSerializer(Supplier<RequestScopedAttributes> contextProvider, ObjectMapper objectMapper) {
         Assert.notNull(objectMapper, "'objectMapper' must not be null.");
-        Assert.notNull(requestScopedAttributes, "'requestScopedAttributes' must not be null.");
-        this.requestScopedAttributes = requestScopedAttributes;
+        Assert.notNull(contextProvider, "'contextProvider' must not be null.");
+        this.contextProvider = contextProvider;
         this.objectMapper = objectMapper;
     }
 
@@ -61,7 +63,7 @@ public class MessageWrapperSerializer<T> implements Serializer<T> {
                 else
                     event = this.objectMapper.writeValueAsString(data);
             }
-            return objectMapper.writeValueAsBytes(new MessageWrapper(event, requestScopedAttributes));
+            return objectMapper.writeValueAsBytes(new MessageWrapper(event, contextProvider.get()));
         } catch (IOException ex) {
             throw new SerializationException("Can't serialize data [" + data + "] for topic [" + topic + "]", ex);
         }

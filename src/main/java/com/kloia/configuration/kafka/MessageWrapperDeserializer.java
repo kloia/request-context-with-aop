@@ -23,40 +23,41 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.kloia.configuration.RequestScopedAttributes;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ResolvableType;
 import org.apache.kafka.common.serialization.Deserializer;
+import org.springframework.core.ResolvableType;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Consumer;
 
 
 @Slf4j
 public class MessageWrapperDeserializer<T> implements Deserializer<T> {
     protected final ObjectMapper objectMapper;
     private final Class<T> targetType;
-    private final RequestScopedAttributes requestScopedAttributes;
+    private final Consumer<RequestScopedAttributes> contextApplier;
     private ObjectReader wrapperReader;
     private ObjectReader reader;
 
-    protected MessageWrapperDeserializer(RequestScopedAttributes requestScopedAttributes) {
-        this(requestScopedAttributes, (Class<T>) null);
+    protected MessageWrapperDeserializer(Consumer<RequestScopedAttributes> contextApplier) {
+        this(contextApplier, (Class<T>) null);
     }
 
-    protected MessageWrapperDeserializer(RequestScopedAttributes requestScopedAttributes, ObjectMapper objectMapper) {
-        this(requestScopedAttributes, null, objectMapper);
+    protected MessageWrapperDeserializer(Consumer<RequestScopedAttributes> contextApplier, ObjectMapper objectMapper) {
+        this(contextApplier, null, objectMapper);
     }
 
-    public MessageWrapperDeserializer(RequestScopedAttributes requestScopedAttributes, Class<T> targetType) {
-        this(requestScopedAttributes, targetType, new ObjectMapper());
+    public MessageWrapperDeserializer(Consumer<RequestScopedAttributes> contextApplier, Class<T> targetType) {
+        this(contextApplier, targetType, new ObjectMapper());
         this.objectMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     @SuppressWarnings("unchecked")
-    public MessageWrapperDeserializer(RequestScopedAttributes requestScopedAttributes, Class<T> targetType, ObjectMapper objectMapper) {
-        this.requestScopedAttributes = requestScopedAttributes;
+    public MessageWrapperDeserializer(Consumer<RequestScopedAttributes> contextApplier, Class<T> targetType, ObjectMapper objectMapper) {
+        this.contextApplier = contextApplier;
         Assert.notNull(objectMapper, "'objectMapper' must not be null.");
         this.objectMapper = objectMapper;
         if (targetType == null) {
@@ -83,13 +84,18 @@ public class MessageWrapperDeserializer<T> implements Deserializer<T> {
             } else {
                 return null;
             }
-            if (result.getEventNode() == null)
+
+            RequestScopedAttributes requestScopedAttributes = result.getRequestScopedAttributes();
+            contextApplier.accept(requestScopedAttributes);
+
+            if (result.getEventNode() == null) {
                 return null;
-            else {
-                if (targetType.isAssignableFrom(TreeNode.class))
+            } else {
+                if (targetType.isAssignableFrom(TreeNode.class)) {
                     return (T) result.getEventNode();
-                else
+                } else {
                     return this.reader.readValue(result.getEventNode());
+                }
             }
 
         } catch (IOException e) {
