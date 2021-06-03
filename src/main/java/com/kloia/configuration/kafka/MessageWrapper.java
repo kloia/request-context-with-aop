@@ -20,9 +20,9 @@ public class MessageWrapper {
     public MessageWrapper() {
     }
 
-    public MessageWrapper(String event, RequestScopedAttributes userContext) {
+    public MessageWrapper(String event, RequestScopedAttributes requestScopedAttributes) {
         this.event = event;
-        this.requestScopedAttributes = userContext;
+        this.requestScopedAttributes = requestScopedAttributes;
     }
 
     private void setEvent(JsonNode eventNode) {
